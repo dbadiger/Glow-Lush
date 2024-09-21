@@ -11,6 +11,7 @@ import Cart from "./Pages/Cart";
 import PlaceOrder from "./Pages/PlaceOrder";
 import Product from "./Pages/Product";
 import Footer from "./Components/Footer";
+import SearchBar from "./Components/SearchBar";
 
 
 const App =()=>{
@@ -19,6 +20,7 @@ const App =()=>{
   return(
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar/>
+      <SearchBar/>
      <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/about" element={<About/>} />
