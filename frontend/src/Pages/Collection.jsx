@@ -13,6 +13,29 @@ const Collection = () => {
   const [subCategory, setSubCategory] = useState([])
   const [sortType, setSortType] = useState('relavant')
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage]= useState(8)
+  const indexOfLastItem = currentPage * rowsPerPage;
+  const indexOfFirstItem = indexOfLastItem - rowsPerPage
+  const currentItems = filterProduct.slice(indexOfFirstItem, indexOfLastItem)
+  const totalPages =parseInt( Math.ceil(products.length / rowsPerPage))
+
+  // console.log(currentItems);
+  // console.log(totalPages);
+
+  const handlePrev=()=>{
+    setCurrentPage((prev)=>Math.max(prev-1, 1))
+    
+  }
+
+  const handleNext=()=>{
+    setCurrentPage((prev)=>Math.min(prev+1, totalPages))
+  }
+  const handlePageClick =(pageNumber)=>{
+    setCurrentPage(pageNumber)
+  }
+  
+
   const toggleCategory = (e) => {
     if (category.includes(e.target.value)) {
       setCategory(prev => prev.filter(item => item !== e.target.value))
@@ -36,8 +59,8 @@ const Collection = () => {
   const applyFilter = () => {
     let productsCopy = products.slice();
 
-    if(showSearch && search){
-      productsCopy = productsCopy.filter(item=>item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+    if (showSearch && search) {
+      productsCopy = productsCopy.filter(item => item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
     }
 
 
@@ -69,31 +92,35 @@ const Collection = () => {
 
 
 
-const sortProduct = ()=>{
+  const sortProduct = () => {
 
-  let filterProductsCopy = filterProduct.slice();
+    let filterProductsCopy = filterProduct.slice();
 
-  switch (sortType) {
-    case 'low-high':
-        setFilterProduct(filterProductsCopy.sort((a,b)=>(a.price - b.price)))
+    switch (sortType) {
+      case 'low-high':
+        setFilterProduct(filterProductsCopy.sort((a, b) => (a.price - b.price)))
         console.log('low to high');
-        
-      break;
-    case 'high-low':
-        setFilterProduct(filterProductsCopy.sort((a,b)=>( b.price - a.price)))
+
+        break;
+      case 'high-low':
+        setFilterProduct(filterProductsCopy.sort((a, b) => (b.price - a.price)))
         console.log('high to low');
-        
-      break;
 
-    default: 
-    applyFilter();
-      break;
+        break;
+
+      default:
+        applyFilter();
+        break;
+    }
   }
-}
 
-useEffect(() => {
+  useEffect(() => {
     sortProduct();
   }, [sortType])
+
+
+
+
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
@@ -141,21 +168,56 @@ useEffect(() => {
         <div className="flex justify-between text-base sm:text-2xl mb-4">
           <Title text1={"ALL"} text2={"COLLECTIONS"} />
           {/* ------Product Sort--------- */}
-          <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2'>
+          <select onChange={(e) => setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2'>
             <option value="relavant">Sort By: Relavent</option>
             <option value="low-high">Sort By: Low to High </option>
             <option value="high-low">Sort By: High to Low</option>
           </select>
         </div>
 
-        {/* --------Display Products */}
-        <div className="grid grid-cols md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 ">
+
+ {/* --------Pagination------- */}
+ <div className="grid grid-cols md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 ">
+          {
+            currentItems.map((item, index) => (
+              <ProductItem key={index} name={item.name} id={item._id} price={item.price} image={item.image} />
+            ))
+          }
+        </div>
+        <div className="flex justify-between mt-4 py-8">
+
+          <button
+          onClick={handlePrev} disabled={currentPage === 1}
+          className='border border-black px-8 py-3 text-sm 
+          hover:bg-black hover:text-white transition-all duration-500
+           disabled:cursor-not-allowed '>Prev</button>
+          
+          {
+            Array.from({length:totalPages},(_, index)=>(
+              <button 
+              onClick={()=>handlePageClick(index+1)}
+              className={currentPage === index+1
+                ? 'border border-black px-8 py-3 text-sm bg-black text-white'
+                :'border border-black px-8 py-3 text-sm bg-white text-black'}>{index+1}</button>
+            ))
+          }
+          
+          <button 
+          onClick={handleNext} disabled={currentPage === totalPages}
+          className='border border-black px-8 py-3 text-sm 
+          hover:bg-black hover:text-white transition-all duration-500
+          disabled:cursor-not-allowed'>Next</button>
+        </div>
+        {/* --------Display Products------- */}
+        {/* <div className="grid grid-cols md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 ">
           {
             filterProduct.map((item, index) => (
               <ProductItem key={index} name={item.name} id={item._id} price={item.price} image={item.image} />
             ))
           }
-        </div>
+        </div> */}
+
+       
       </div>
     </div>
   )
