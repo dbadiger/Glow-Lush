@@ -7,7 +7,7 @@ const Footer = () => {
     <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm text-gray-800'>
       
       <div >
-        <img src={assets.logo} alt="" className='mb-5 w-32' />
+        <img src={assets.Pixie_Dust_Logo} alt="" className='mb-5 w-32' />
         <p className='w-full md:w-2/3 text-gray-600'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum expedita inventore tempore possimus sunt, adipisci consectetur ut placeat magnam doloremque voluptatum, laborum natus accusantium animi soluta. Ipsa eius fugiat veniam.</p>
       </div>
 
